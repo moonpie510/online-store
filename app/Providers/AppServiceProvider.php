@@ -27,12 +27,6 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict(!app()->isProduction());
 
         if (app()->isProduction()) {
-            DB::whenQueryingForLongerThan(CarbonInterval::seconds(5), function (Connection $connection) {
-                logger()
-                    ->channel('telegram')
-                    ->debug('whenQueryingForLongerThan: ' . $connection->query()->toSql());
-            });
-
             DB::listen(function ($query) {
                 if ($query->time > 100) {
                     logger()
@@ -41,8 +35,7 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
 
-            $kernel = app(Kernel::class);
-            $kernel->whenRequestLifecycleIsLongerThan(
+            app(Kernel::class)->whenRequestLifecycleIsLongerThan(
                 CarbonInterval::seconds(4),
                 function () {
                     logger()
