@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SignUpFormRequest;
-use Domain\Auth\Contracts\RegisterNewUserContract;
+use App\Http\Requests\ForgotPasswordFormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Password;
 
@@ -15,7 +14,7 @@ class ForgotPasswordController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function handle(SignUpFormRequest $request, RegisterNewUserContract $action): RedirectResponse
+    public function handle(ForgotPasswordFormRequest $request): RedirectResponse
     {
         $status = Password::sendResetLink(
             $request->only('email')
@@ -23,7 +22,6 @@ class ForgotPasswordController extends Controller
 
         if ($status === Password::RESET_LINK_SENT) {
             flash()->info(__($status));
-
             return back();
         }
 

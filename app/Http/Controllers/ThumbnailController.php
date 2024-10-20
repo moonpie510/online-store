@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ThumbnailController extends Controller
 {
@@ -25,8 +25,8 @@ class ThumbnailController extends Controller
             $storage->makeDirectory($newDirPath);
         }
 
-        if (!$storage->exists($realPath)) {
-            $image = Image::make($storage->path($realPath));
+        if (!$storage->exists($resultPath)) {
+            $image = Image::read($storage->path($realPath));
 
             [$w, $h] = explode('x', $size);
 
