@@ -32,9 +32,9 @@ class ThumbnailController extends Controller
 
             $image->{$method}($w, $h);
 
-            $image->save($storage->path($realPath));
+            $image->save($storage->path($resultPath));
         }
 
-        return response()->file($storage->path($realPath));
+        return response()->file($storage->path($resultPath));
     }
 }
