@@ -1,12 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace Domain\Catalog\Models;
 
+use App\Models\Product;
+use Domain\Catalog\Collections\CategoryCollection;
+use Domain\Catalog\QueryBuilders\CategoryQueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @method static CategoryQueryBuilder|Category query()
+ */
 class Category extends Model
 {
     use HasFactory;
@@ -18,11 +24,14 @@ class Category extends Model
         'sorting',
     ];
 
-    public function scopeHomePage(Builder $query)
+    public function newCollection(array $models = []): CategoryCollection
     {
-        return $query->where('on_home_page', true)
-            ->orderBy('sorting')
-            ->limit(6);
+        return new CategoryCollection($models);
+    }
+
+    public function newEloquentBuilder($query): CategoryQueryBuilder
+    {
+        return new CategoryQueryBuilder($query);
     }
 
 

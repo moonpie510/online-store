@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Traits\Models;
+namespace Support\Traits\Models;
 
 use Illuminate\Support\Facades\File;
+
 trait HasThumbnail
 {
     abstract protected function thumbnailDir(): string;
