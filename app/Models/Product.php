@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Scout\Attributes\SearchUsingFullText;
+use Laravel\Scout\Attributes\SearchUsingPrefix;
+use Laravel\Scout\Searchable;
 use Support\Casts\PriceCast;
 use Support\Traits\Models\HasSlug;
 use Support\Traits\Models\HasThumbnail;
@@ -27,6 +30,7 @@ class Product extends Model
         'thumbnail',
         'on_home_page',
         'sorting',
+        'text',
 
     ];
 
@@ -34,9 +38,33 @@ class Product extends Model
         'price' => PriceCast::class,
     ];
 
+
     protected function thumbnailDir(): string
     {
         return 'products';
+    }
+
+    public function scopeFiltered(Builder $query)
+    {
+        return $query->when(request('filters.brands'), function (Builder $q) {
+            $q->whereIn('brand_id', request('filters.brands'));
+        })->when(request('filters.price'), function (Builder $q) {
+            $q->whereBetween('price', [
+                request('filters.price.from', 0) * 100,
+                request('filters.price.to', 100000) * 100,
+            ]);
+        });
+    }
+
+    public function scopeSorted(Builder $query)
+    {
+        return $query->when(request('sort'), function (Builder $q) {
+            $column = request()->str('sort');
+            if ($column->contains(['price', 'title'])) {
+                $direction = $column->contains('-') ? 'desc' : 'asc';
+                $q->orderBy((string) $column->remove('-'), $direction);
+            }
+        });
     }
 
     public function scopeHomePage(Builder $query)
