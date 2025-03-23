@@ -22,7 +22,7 @@
                 <div class="text-pink text-md xl:text-lg font-black">{{ $item->price }}</div>
             </div>
             <div class="flex flex-wrap items-center gap-4">
-                <form action="{{ route('cart.add', $item) }}"
+                <form action=""
                       method="POST">
                     @csrf
                     <button type="submit" class="w-[56px] !h-[56px] !px-0 btn btn-pink">

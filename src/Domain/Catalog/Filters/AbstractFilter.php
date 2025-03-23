@@ -21,9 +21,7 @@ abstract class AbstractFilter implements \Stringable
 
     public function __invoke(Builder $query, $next)
     {
-        $this->apply($query);
-
-        return $next($query);
+        return $next($this->apply($query));
     }
 
     public function requestValue(?string $index = null, mixed $default = null): mixed
