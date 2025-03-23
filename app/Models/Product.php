@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Domain\Catalog\Facades\Sorter;
 use Domain\Catalog\Models\Brand;
 use Domain\Catalog\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,13 +53,7 @@ class Product extends Model
 
     public function scopeSorted(Builder $query)
     {
-        return $query->when(request('sort'), function (Builder $q) {
-            $column = request()->str('sort');
-            if ($column->contains(['price', 'title'])) {
-                $direction = $column->contains('-') ? 'desc' : 'asc';
-                $q->orderBy((string) $column->remove('-'), $direction);
-            }
-        });
+        Sorter::run($query);
     }
 
     public function scopeHomePage(Builder $query)
