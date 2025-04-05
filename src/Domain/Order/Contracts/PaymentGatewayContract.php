@@ -11,7 +11,7 @@ interface PaymentGatewayContract
 {
     public function paymentId(): string;
 
-    public function confiqure(array $config): void;
+    public function configure(array $config): void;
 
     public function data(PaymentData $data): self;
 
